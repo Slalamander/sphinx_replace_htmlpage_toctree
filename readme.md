@@ -33,3 +33,9 @@ toctrees that can be used for replacement must be in the root document (I suspec
 At least for autobuild, has to be run with the ``-E`` flag, which increases build time since it basically means sphinx won't use a cache. The problem with this lies with the toctree itself not being updated, I suspect because it uses the pickles doctree when updating a document in which the referenced toctree does not appear. But I haven't quite figured out how to get access to the updated toctree.
 
 To install: download the repo, unpack it, open a terminal in the folder and run `pip install .`. The ``pyproject.toml`` should take care of the rest.
+
+Testing: run 
+
+```
+sphinx-autobuild test test/build/html -a -E
+```
