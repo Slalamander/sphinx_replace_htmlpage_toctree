@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+namespaces = false
+
+[project]
+name = "sphinx_replace_htmlpage_toctree"
+authors = [
+    { name="Slalamander" }
+]
+description = "Makes it possible to (very roughly) use a different globaltoc on specific pages of html documentation."
+readme = "readme.md"
+
+
+keywords = ["shpinx", "toctree"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+dependencies = []
+
+dynamic = ["version"]
+
+[project.scripts]
+inkBoard = "inkBoard.__main__:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "sphinx_replace_htmlpage_toctree.__version__"}
