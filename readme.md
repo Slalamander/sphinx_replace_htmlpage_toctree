@@ -2,7 +2,7 @@ Quick and dirty way to use custom toctrees in sphinx. Leaving this here mainly a
 
 Usage:
 in ``conf.py``, set the variable ``replace_global_tocs`` to a dict. 
-Keys are docnames or globs to replace to global toc for. Values are toctree names (given via the ``:name::`` directive.)
+Keys are docnames or globs to replace to global toc for. Values are toctree names (given via the ``:name:`` directive.)
 
 usage:
 ```python
