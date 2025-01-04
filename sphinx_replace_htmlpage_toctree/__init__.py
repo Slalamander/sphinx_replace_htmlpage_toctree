@@ -20,7 +20,9 @@ _LOGGER = logging.getLogger(__name__)
 EXTENSION_NAME = "replace-htmlpage-toctree"
 TOCLIST_ATTR = "replace_docname_toctree"
 
-def get_doctree_thing(app: Sphinx, pagename, templatename, context, doctree):
+def update_doctree_context(app: Sphinx, pagename, templatename, context, doctree):
+    """Updates the toctree key in the context object if the pagename has a custom toc
+    """
 
     if pagename in app.env.replace_docname_toctree:
         context["toctree"] =  lambda **kwargs: process_tutorial_toc(app, pagename, app.env.replace_docname_toctree[pagename], **kwargs)
@@ -106,7 +108,7 @@ def process_namedtocs(app: Sphinx, env: BuildEnvironment):
 def setup(app: Sphinx) -> ExtensionMetadata:
 
     app.add_config_value('replace_global_tocs', {}, 'env')
-    app.connect('html-page-context', get_doctree_thing)
+    app.connect('html-page-context', update_doctree_context)
 
     app.connect('env-get-updated', process_namedtocs)
     # app.connect("env-get-outdated",isold)
