@@ -77,7 +77,19 @@ def process_namedtocs(app: Sphinx, env: BuildEnvironment):
         else:
             _LOGGER.error(f"{EXTENSION_NAME}: {doc} was not found and is not an expression.")
     
-    return []
+    return ["tutorial/index", "index"]
+
+def before_read(app: Sphinx, env: BuildEnvironment, docnames: list):
+
+    env.found_docs
+
+    if "tutorial/index" not in docnames: docnames.append("tutorial/index")
+    if "index" not in docnames: docnames.append("index")
+
+    return
+
+def return_updated(app, env):
+    return ["tutorial/index", "index"]
 
 def setup(app: Sphinx) -> ExtensionMetadata:
 
@@ -85,6 +97,6 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.connect('html-page-context', update_toctree_context)
 
     app.connect('env-get-updated', process_namedtocs)
-    # app.connect("env-get-outdated",isold)
+    app.connect("env-updated", return_updated)
 
     return ExtensionMetadata(version=__version__, parallel_read_safe=True, parallel_write_safe=True)

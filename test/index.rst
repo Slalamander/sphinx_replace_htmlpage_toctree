@@ -13,6 +13,6 @@ Test document to see if the toctree changes
 .. toctree::
     :name: tutorialtree
 
-    self
+    
     tutorial/index
     tutorial/foo
