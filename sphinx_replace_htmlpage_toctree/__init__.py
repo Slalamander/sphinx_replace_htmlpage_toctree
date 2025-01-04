@@ -20,15 +20,15 @@ _LOGGER = logging.getLogger(__name__)
 EXTENSION_NAME = "replace-htmlpage-toctree"
 TOCLIST_ATTR = "replace_docname_toctree"
 
-def update_doctree_context(app: Sphinx, pagename, templatename, context, doctree):
+def update_toctree_context(app: Sphinx, pagename, templatename, context, doctree):
     """Updates the toctree key in the context object if the pagename has a custom toc
     """
 
     if pagename in app.env.replace_docname_toctree:
-        context["toctree"] =  lambda **kwargs: process_tutorial_toc(app, pagename, app.env.replace_docname_toctree[pagename], **kwargs)
+        context["toctree"] =  lambda **kwargs: render_named_toctree(app, pagename, app.env.replace_docname_toctree[pagename], **kwargs)
     return
 
-def process_tutorial_toc(
+def render_named_toctree(
         app: Sphinx, docname: str, tocname: str, collapse: bool = True, **kwargs: Any
     ) -> str:
 
@@ -49,32 +49,6 @@ def process_tutorial_toc(
         resolved = None
     return builder.render_partial(resolved)["fragment"]
 
-# class NamedTOC(SphinxDirective):
-
-#     has_content = True
-#     required_arguments = 1
-
-#     _custom_tocs = {}
-
-#     def run(self):
-
-#         if not hasattr(self.env, TOCLIST_ATTR):
-#             setattr(self.env, TOCLIST_ATTR, {})
-
-#         toc_name = self.arguments[0]
-#         env_ids = self.env.master_doctree.ids
-#         if toc_name not in env_ids:
-#             _LOGGER.error(f"{self.get_location()}: No toctree with name {toc_name} was found")
-#             return []
-        
-#         named_toc = env_ids[toc_name]
-#         if "toctree-wrapper" not in named_toc.attributes["classes"]:
-#             _LOGGER.error(f"{self.get_location()}: {toc_name} is not a toctree")
-#             return []
-        
-#         self.__class__._custom_tocs[self.env.docname] = toc_name
-#         self.env.replace_docname_toctree[self.env.docname] = toc_name
-#         return [namedtoc('')]
 
 def isold(app, env, added, changed, removed):
     return ["/documentation/index"]
@@ -108,7 +82,7 @@ def process_namedtocs(app: Sphinx, env: BuildEnvironment):
 def setup(app: Sphinx) -> ExtensionMetadata:
 
     app.add_config_value('replace_global_tocs', {}, 'env')
-    app.connect('html-page-context', update_doctree_context)
+    app.connect('html-page-context', update_toctree_context)
 
     app.connect('env-get-updated', process_namedtocs)
     # app.connect("env-get-outdated",isold)
