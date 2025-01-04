@@ -5,9 +5,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 include-package-data = true
 
-[tool.setuptools.packages.find]
-namespaces = false
-
 [project]
 name = "sphinx_replace_htmlpage_toctree"
 authors = [
