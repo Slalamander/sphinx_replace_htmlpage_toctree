@@ -1,8 +1,8 @@
 
 
-project = 'replace toctree'
-copyright = '2024, Slalamander'
-author = 'Slalamander'
+project = 'replace toctree tester'
+copyright = '2024, Foo'
+author = 'Bar'
 release = '0.0.1'
 html_theme = 'alabaster'
 

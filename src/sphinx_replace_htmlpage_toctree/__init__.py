@@ -50,8 +50,8 @@ def render_named_toctree(
     return builder.render_partial(resolved)["fragment"]
 
 
-def isold(app, env, added, changed, removed):
-    return ["/documentation/index"]
+def isold(app, env, added, changed: set, removed):
+    return {"tutorial/index", "index"}
 
 def process_namedtocs(app: Sphinx, env: BuildEnvironment):
 
@@ -98,5 +98,6 @@ def setup(app: Sphinx) -> ExtensionMetadata:
 
     app.connect('env-get-updated', process_namedtocs)
     app.connect("env-updated", return_updated)
+    app.connect("env-get-outdated", isold)
 
-    return ExtensionMetadata(version=__version__, parallel_read_safe=True, parallel_write_safe=True)
+    return ExtensionMetadata(version=__version__, parallel_read_safe=False, parallel_write_safe=False)
