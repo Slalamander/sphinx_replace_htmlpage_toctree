@@ -36,7 +36,8 @@ def render_named_toctree(
     maxdepth = kwargs.get('maxdepth',0)
     includehidden = kwargs.get("includehidden", False)
     titles_only = kwargs.get("titles_only", False)
-    toc_env = app.env.master_doctree.ids[tocname]
+    # toc_env = app.env.master_doctree.ids[tocname]
+    toc_env = app.env.main_toctrees_found[tocname]
     toc_tree = toc_env.children[0]
 
     # for toctree_node in app.env.master_doctree.findall(addnodes.toctree):
@@ -50,19 +51,32 @@ def render_named_toctree(
     return builder.render_partial(resolved)["fragment"]
 
 
-def isold(app, env, added, changed: set, removed):
-    return {"tutorial/index", "index"}
+def isold(app, env, docname):
+    test = {"tutorial/index", "index"}
+    return
 
 def process_namedtocs(app: Sphinx, env: BuildEnvironment):
 
     app.env.replace_docname_toctree = {}
+    env_ids = app.env.master_doctree.ids.copy()
+    if "toctrees" in app.env.found_docs:
+        toctree_doc = app.env.get_doctree("toctrees")
+        toctree_ids = toctree_doc.ids
+        env_ids.update(toctree_ids)
+    
+    toctrees = {}
+    for id, comp in env_ids.items():
+        if "toctree-wrapper" in comp.attributes["classes"]:
+            toctrees[id] = comp
+
+    app.env.main_toctrees_found = toctrees
     for doc, treename in app.config.replace_global_tocs.items():
-        env_ids = app.env.master_doctree.ids
-        if treename not in env_ids:
+        
+        if treename not in toctrees:
             _LOGGER.error(f"No toctree with name {treename} was found")
             continue
         
-        named_toc = env_ids[treename]
+        named_toc = toctrees[treename]
         if "toctree-wrapper" not in named_toc.attributes["classes"]:
             _LOGGER.error(f"{treename} is not a toctree")
             continue
@@ -101,6 +115,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
 
     app.connect('env-get-updated', process_namedtocs)
     app.connect("env-updated", return_updated)
-    app.connect("env-get-outdated", isold)
+    # app.connect("env-get-outdated", isold)
+    app.connect("env-purge-doc", isold)
 
     return ExtensionMetadata(version=__version__, parallel_read_safe=False, parallel_write_safe=False)
