@@ -88,7 +88,10 @@ def before_read(app: Sphinx, env: BuildEnvironment, docnames: list):
 
     return
 
-def return_updated(app, env):
+def return_updated(app: Sphinx, env: BuildEnvironment):
+    
+    # if not app.fresh_env_used:    ##This does not work as the environment has already been created
+    #     app._create_fresh_env()
     return ["tutorial/index", "index"]
 
 def setup(app: Sphinx) -> ExtensionMetadata:
